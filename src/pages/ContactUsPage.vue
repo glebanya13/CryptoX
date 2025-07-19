@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="w-full mx-auto pt-30 px-4 space-y-6">
+  <div class="w-full mx-auto pt-10 px-4 space-y-6">
     <h1 class="text-center text-2xl text-white mb-10">КОНТАКТЫ</h1>
 
     <div>

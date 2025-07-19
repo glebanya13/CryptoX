@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="w-full mx-auto pt-30 px-4 space-y-6 pb-10">
+  <div class="w-full mx-auto px-4 pt-10 space-y-6 pb-10">
     <h1 class="text-center text-2xl text-white mb-6">О КОМПАНИИ</h1>
     
     <p class="text-center text-white text-lg mb-10 max-w-2xl mx-auto">
@@ -31,9 +31,3 @@
     </div>
   </div>
 </template>
-
-<style>
-.pt-30 {
-  padding-top: 7.5rem;
-}
-</style>

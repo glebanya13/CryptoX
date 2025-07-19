@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="w-full mx-auto pt-30 px-4 space-y-10 pb-10">
+  <div class="w-full mx-auto pt-10 px-4 space-y-10 pb-10">
     <h1 class="text-center text-2xl text-white mb-10">НОВОСТИ</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
