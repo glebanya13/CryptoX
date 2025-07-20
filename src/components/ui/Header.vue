@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 
 const isOpen = ref(false);
 
@@ -26,10 +25,17 @@ const routes = [
   <header
     class="bg-[#360036] w-full px-4 py-4 flex justify-between items-center border-b border-white relative z-50"
   >
-    <img src="../assets/logo.svg" alt="Logo" class="h-12" />
-
+    <RouterLink to="/">
+      <img src="../../assets/icons/logo.svg" alt="Logo" class="h-12" />
+    </RouterLink>
     <div class="flex items-center gap-4">
-      <img src="../assets/user.svg" alt="User" class="h-8 w-8" />
+      <RouterLink to="/profile">
+        <img
+          src="../../assets/icons/user.svg"
+          alt="User"
+          class="h-8 w-8 hover:opacity-80 transition-opacity"
+        />
+      </RouterLink>
 
       <div class="space-y-1 cursor-pointer" @click="toggleMenu">
         <span class="block w-7 h-1 bg-white rounded"></span>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 import { ref as dbRef, onValue, off } from "firebase/database";
 
 type Currency = {
@@ -27,6 +27,8 @@ const rubAmount = ref(minAmount.toString());
 const cnyAmount = ref("");
 
 onMounted(() => {
+  localStorage.setItem("amount_from", minAmount.toString());
+
   const rateRef = dbRef(db, "exchangeRates/Valute");
   const handleValue = (snapshot: any) => {
     const val = snapshot.val();
@@ -43,7 +45,6 @@ watch(toCurrency, (newVal) => {
     const options = RECEIVING_OPTIONS[newVal];
     const defaultMethod = options?.[0] || "";
     method.value = defaultMethod;
-    localStorage.setItem("toAsset", newVal);
     localStorage.setItem("receive_method", defaultMethod);
     updateCnyAmount();
   }
@@ -80,11 +81,14 @@ const updateCnyAmount = () => {
 const handleFromInput = (e: Event) => {
   const target = e.target as HTMLInputElement;
   let val = parseFloat(target.value);
+
   if (isNaN(val) || val < minAmount) {
     val = minAmount;
+    target.value = val.toString();
   }
 
   rubAmount.value = val.toString();
+
   localStorage.setItem("amount_from", val.toString());
   updateCnyAmount();
 };
@@ -115,19 +119,19 @@ const isFormValid = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full pr-3 items-center justify-center">
+  <div class="flex w-full items-center justify-center px-3 py-10">
     <div
-      class="w-full max-w-md bg-white text-black rounded-2xl px-5 pt-10 pb-6 relative shadow-md"
+      class="w-full max-w-md md:max-w-lg xl:max-w-2xl bg-white text-black rounded-2xl px-5 pt-10 pb-6 relative shadow-md"
     >
       <div class="absolute top-4 left-0 right-0">
         <div
-          class="mx-0 -translate-y-1/2 rounded-t-xl border border-white bg-[#360036] text-white text-center text-xs py-2"
+          class="mx-auto w-full -translate-y-1/2 rounded-t-xl border border-white bg-[#360036] text-white text-center text-xs py-2"
         >
           Присоединяйтесь к нашему Telegram каналу
         </div>
       </div>
 
-      <h2 class="text-center text-base font-medium mb-6 mt-2">
+      <h2 class="text-center text-base md:text-xl font-medium mb-6 mt-2">
         ОБМЕН РУБЛЕЙ НА ЮАНИ/СОМЫ
       </h2>
 
@@ -141,7 +145,7 @@ const isFormValid = computed(() => {
               @input="handleFromInput"
               type="number"
               placeholder="Введите сумму"
-              class="bg-transparent outline-none w-full text-sm placeholder-gray-500"
+              class="bg-transparent outline-none w-full text-sm md:text-base placeholder-gray-500"
               min="50000"
             />
             <select v-model="fromCurrency" class="select-style ml-2" disabled>
@@ -151,7 +155,7 @@ const isFormValid = computed(() => {
         </div>
       </div>
 
-      <div class="text-center text-gray-500 my-2">↓ ↑</div>
+      <div class="text-center text-gray-500 my-2 text-xl md:text-2xl">↓ ↑</div>
 
       <div class="mb-6">
         <div class="gradient-border p-[2px] rounded-xl">
@@ -162,7 +166,7 @@ const isFormValid = computed(() => {
               :value="cnyAmount"
               disabled
               placeholder="Введите сумму"
-              class="bg-transparent outline-none w-full text-sm placeholder-gray-500"
+              class="bg-transparent outline-none w-full text-sm md:text-base placeholder-gray-500"
             />
             <select v-model="toCurrency" class="select-style ml-2">
               <option
@@ -184,7 +188,6 @@ const isFormValid = computed(() => {
           @change="handleReceiveMethodChange"
           class="select-method"
         >
-          <option disabled value="">Выберите способ</option>
           <option
             v-for="item in RECEIVING_OPTIONS[toCurrency]"
             :key="item"
@@ -224,20 +227,26 @@ const isFormValid = computed(() => {
   color: black;
   padding-left: 6px;
 }
+
 .select-method {
-  height: 35px;
+  height: 40px;
   background-color: #eaeaea;
   border: 1px solid #ccc;
   font-size: 14px;
   color: black;
   border-radius: 16px;
   padding: 0 12px;
-  width: 220px;
+  width: 100%;
+  max-width: 240px;
   margin: 0 auto;
   display: block;
   text-align: center;
 }
-input:disabled {
-  cursor: not-allowed;
+
+@media (min-width: 768px) {
+  .select-method {
+    font-size: 16px;
+    height: 45px;
+  }
 }
 </style>
