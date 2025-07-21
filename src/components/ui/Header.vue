@@ -12,18 +12,27 @@ const closeMenu = () => {
 };
 
 const routes = [
-  { path: "/", label: "Главная" },
-  { path: "/news", label: "Новости" },
-  { path: "/reviews", label: "Отзывы" },
-  { path: "/about-us", label: "О нас" },
-  { path: "/contact-us", label: "Контакты" },
-  { path: "/sign-in", label: "Вход" },
+  { path: "exchange", label: "Главная" },
+  { path: "about-us", label: "О нас" },
+  { path: "news", label: "Новости" },
+  { path: "reviews", label: "Отзывы" },
+  { path: "contact-us", label: "Контакты" },
 ];
+
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    const yOffset = -80;
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+    closeMenu();
+  }
+};
 </script>
 
 <template>
   <header
-    class="bg-[#360036] w-full px-4 py-4 flex justify-between items-center border-b border-white relative z-50"
+    class="bg-[#360036] fixed top-0 w-full px-4 py-4 flex justify-between items-center border-b border-white z-50"
   >
     <RouterLink to="/">
       <img src="../../assets/icons/logo.svg" alt="Logo" class="h-12" />
@@ -50,28 +59,16 @@ const routes = [
         class="absolute top-full right-4 mt-2 w-48 bg-[#4D0538] text-white rounded-lg shadow-lg border border-white"
       >
         <nav class="flex flex-col py-2">
-          <RouterLink
+          <button
             v-for="(route, index) in routes"
             :key="index"
-            :to="route.path"
-            class="px-4 py-2 hover:bg-[#F06000] hover:text-black transition"
-            @click="closeMenu"
+            class="text-left px-4 py-2 hover:bg-[#F06000] hover:text-black transition"
+            @click="scrollToSection(route.path)"
           >
             {{ route.label }}
-          </RouterLink>
+          </button>
         </nav>
       </div>
     </transition>
   </header>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
