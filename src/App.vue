@@ -10,7 +10,7 @@ import Footer from "./components/ui/Footer.vue";
     <Header />
 
     <main
-      class="main-content min-h-screen bg-gradient-to-b from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] text-white flex px-4 pt-[82px] pb-[112px]"
+      class="main-content min-h-screen bg-gradient-to-r from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] text-white flex px-4 pt-[82px] pb-[112px]"
     >
       <RouterView />
     </main>

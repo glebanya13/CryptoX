@@ -1,7 +1,37 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+
+const routes = [
+  { id: "exchange", label: "Главная", scroll: true },
+  { id: "about-us", label: "О компании", scroll: true },
+  { id: "contact-us", label: "Контакты", scroll: true },
+  { id: "/profile", label: "Профиль", scroll: false },
+];
+
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    const yOffset = -80;
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+};
+
+const navigateToSection = async (id: string) => {
+  if (route.path !== "/") {
+    await router.push({ path: "/", query: { scrollTo: id } });
+  } else {
+    scrollToSection(id);
+  }
+};
+</script>
 
 <template>
-  <footer class="bg-[#4D0538] text-white text-sm px-4 py-8 mt-auto">
+  <footer class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] text-white text-sm px-4 py-8 mt-auto">
     <div
       class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10"
     >
@@ -19,23 +49,20 @@
       <div class="space-y-2">
         <h2 class="text-[#F05802] text-xl mb-2">Навигация</h2>
         <ul class="space-y-1">
-          <li>
-            <RouterLink to="/" class="hover:underline">Главная</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/about" class="hover:underline"
-              >О компании</RouterLink
-            >
-          </li>
-          <li>
-            <RouterLink to="/contacts" class="hover:underline"
-              >Контакты</RouterLink
-            >
-          </li>
-          <li>
-            <RouterLink to="/profile" class="hover:underline"
-              >Профиль</RouterLink
-            >
+          <li v-for="routeItem in routes" :key="routeItem.id">
+            <template v-if="routeItem.scroll">
+              <button
+                @click="navigateToSection(routeItem.id)"
+                class="hover:underline text-left w-full"
+              >
+                {{ routeItem.label }}
+              </button>
+            </template>
+            <template v-else>
+              <RouterLink to="/profile" class="hover:underline">
+                {{ routeItem.label }}
+              </RouterLink>
+            </template>
           </li>
         </ul>
       </div>

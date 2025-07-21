@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
 
 const isOpen = ref(false);
 
@@ -28,15 +32,36 @@ const scrollToSection = (id: string) => {
     closeMenu();
   }
 };
+
+const navigateToSection = async (id: string) => {
+  closeMenu();
+  if (route.path !== "/") {
+    await router.push({ path: "/", query: { scrollTo: id } });
+  } else {
+    scrollToSection(id);
+  }
+};
 </script>
 
 <template>
   <header
-    class="bg-[#360036] fixed top-0 w-full px-4 py-4 flex justify-between items-center border-b border-white z-50"
+    class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] fixed top-0 w-full px-4 py-4 flex justify-between items-center border-b border-white z-50"
   >
     <RouterLink to="/">
       <img src="../../assets/icons/logo.svg" alt="Logo" class="h-12" />
     </RouterLink>
+
+    <nav class="hidden md:flex space-x-6 text-white">
+      <button
+        v-for="route in routes"
+        :key="route.path"
+        class="hover:text-[#F06000] transition"
+        @click.prevent="navigateToSection(route.path)"
+      >
+        {{ route.label }}
+      </button>
+    </nav>
+
     <div class="flex items-center gap-4">
       <RouterLink to="/profile">
         <img
@@ -46,7 +71,13 @@ const scrollToSection = (id: string) => {
         />
       </RouterLink>
 
-      <div class="space-y-1 cursor-pointer" @click="toggleMenu">
+      <div
+        class="space-y-1 cursor-pointer md:hidden"
+        @click="toggleMenu"
+        aria-label="Toggle menu"
+        role="button"
+        tabindex="0"
+      >
         <span class="block w-7 h-1 bg-white rounded"></span>
         <span class="block w-7 h-1 bg-white rounded"></span>
         <span class="block w-7 h-1 bg-white rounded"></span>
@@ -56,14 +87,14 @@ const scrollToSection = (id: string) => {
     <transition name="fade">
       <div
         v-if="isOpen"
-        class="absolute top-full right-4 mt-2 w-48 bg-[#4D0538] text-white rounded-lg shadow-lg border border-white"
+        class="absolute top-full right-4 mt-2 w-48 bg-[#4D0538] text-white rounded-lg shadow-lg border border-white md:hidden"
       >
         <nav class="flex flex-col py-2">
           <button
             v-for="(route, index) in routes"
             :key="index"
             class="text-left px-4 py-2 hover:bg-[#F06000] hover:text-black transition"
-            @click="scrollToSection(route.path)"
+            @click="navigateToSection(route.path)"
           >
             {{ route.label }}
           </button>
