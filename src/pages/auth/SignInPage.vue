@@ -33,7 +33,20 @@ const handleLogin = async () => {
       rememberMe.value ? browserLocalPersistence : browserSessionPersistence
     );
 
-    await signInWithEmailAndPassword(auth, email.value, password.value);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+
+    const user = userCredential.user;
+
+    if (!user.emailVerified) {
+      errorMessage.value =
+        "Пожалуйста, подтвердите свою почту перед входом. Проверьте почту. (Спам)";
+      await auth.signOut();
+      return;
+    }
 
     router.push("/");
   } catch (error: any) {

@@ -4,6 +4,10 @@ import { useRouter } from "vue-router";
 import { db } from "../../../config/firebase";
 import { ref as dbRef, onValue, off } from "firebase/database";
 
+import iconCny from "../../../assets/icons/cny.svg";
+import iconKgs from "../../../assets/icons/kgs.svg";
+import iconRus from "../../../assets/icons/rus.svg";
+
 type Currency = {
   Name: string;
   Value: number;
@@ -14,6 +18,12 @@ type Currency = {
 const RECEIVING_OPTIONS: Record<string, string[]> = {
   CNY: ["Alipay", "WeChat", "1688", "Карго/услуги"],
   KGS: ["Банковский перевод (МБанк, ОптимаБанк, БакайБанк и пр.)", "Наличными"],
+};
+
+const ICON_MAP: Record<string, string> = {
+  RUB: iconRus,
+  CNY: iconCny,
+  KGS: iconKgs,
 };
 
 const router = useRouter();
@@ -116,6 +126,10 @@ const isFormValid = computed(() => {
     method.value !== ""
   );
 });
+
+const getCurrencyIconPath = (currencyCode: string) => {
+  return ICON_MAP[currencyCode] || iconRus;
+};
 </script>
 
 <template>
@@ -124,15 +138,15 @@ const isFormValid = computed(() => {
       class="w-full max-w-md md:max-w-lg xl:max-w-2xl bg-white text-black rounded-2xl px-5 pt-10 pb-6 relative shadow-md"
     >
       <div class="absolute top-4 left-0 right-0">
-        <div
-          class="mx-auto w-full -translate-y-1/2 rounded-t-xl border border-white bg-[#360036] text-white text-center text-xs py-2"
-        >
-          Присоединяйтесь к нашему Telegram каналу
+        <div class="mx-auto w-full -translate-y-1/2 rounded-t-xl border border-white bg-[#360036] text-white text-center text-sm py-2">
+          <span class="flex justify-center items-center gap-1">
+            Присоединяйтесь к нашему Telegram каналу 
+            <img src="../../../assets/icons/tgk.svg" class="h-4 w-4" />
+          </span>
         </div>
       </div>
 
-      <h2 class="text-center text-base md:text-xl font-medium mb-6 mt-2">
-        ОБМЕН РУБЛЕЙ НА ЮАНИ/СОМЫ
+      <h2 class="text-center text-sm md:text-xl mb-5 mt-4">ОБМЕН РУБЛЕЙ НА <span class="font-bold">ЮАНИ 🇨🇳 / СОМЫ 🇰🇬</span>
       </h2>
 
       <div class="mb-4">
@@ -148,9 +162,15 @@ const isFormValid = computed(() => {
               class="bg-transparent outline-none w-full text-sm md:text-base placeholder-gray-500"
               min="50000"
             />
-            <select v-model="fromCurrency" class="select-style ml-2" disabled>
-              <option value="RUB">RUB</option>
-            </select>
+            <div class="relative flex select-style-with-icon items-center">
+              <img 
+                src="../../../assets/icons/rus.svg" 
+                class="h-4 w-4 ml-2 mr-1"
+              />
+              <select v-model="fromCurrency" disabled>
+                <option value="RUB">RUB</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -168,20 +188,27 @@ const isFormValid = computed(() => {
               placeholder="Введите сумму"
               class="bg-transparent outline-none w-full text-sm md:text-base placeholder-gray-500"
             />
-            <select v-model="toCurrency" class="select-style ml-2">
-              <option
-                v-for="key in availableToCurrencies"
-                :key="key"
-                :value="key"
-              >
-                {{ key }}
-              </option>
-            </select>
+            <div class="relative flex select-style-with-icon items-center">
+              <img 
+                v-if="toCurrency"
+                :src="getCurrencyIconPath(toCurrency)" 
+                class="h-4 w-4 ml-2 mr-1"
+              />
+              <select v-model="toCurrency">
+                <option
+                  v-for="key in availableToCurrencies"
+                  :key="key"
+                  :value="key"
+                >
+                  {{ key }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center mb-4">
+      <div class="text-center mb-6">
         <div class="text-sm mb-2 font-normal">СПОСОБ ПОЛУЧЕНИЯ</div>
         <select
           v-model="method"
@@ -226,6 +253,10 @@ const isFormValid = computed(() => {
   font-size: 14px;
   color: black;
   padding-left: 6px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 20px;
 }
 
 .select-method {
@@ -241,6 +272,23 @@ const isFormValid = computed(() => {
   margin: 0 auto;
   display: block;
   text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-style-with-icon {
+  width: 81px;
+  height: 35px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  color: black;
+  padding-right: 24px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 @media (min-width: 768px) {

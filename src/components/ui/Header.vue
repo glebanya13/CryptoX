@@ -45,7 +45,7 @@ const navigateToSection = async (id: string) => {
 
 <template>
   <header
-    class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] fixed top-0 w-full px-4 py-4 flex justify-between items-center border-b border-white z-50"
+    class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[50%] to-[#F06000] fixed top-0 w-full px-4 py-4 flex justify-between items-center border-b border-white z-50"
   >
     <RouterLink to="/">
       <img src="../../assets/icons/logo.svg" alt="Logo" class="h-12" />

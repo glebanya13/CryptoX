@@ -159,7 +159,6 @@ const handleFileChange = (event: Event) => {
   if (target.files?.[0]) file.value = target.files[0];
 };
 
-// Очистка ошибок при вводе, если данные становятся валидными
 const onInputCardNumber = () => {
   if (errors.value.cardNumber && validateCardNumber(cardNumber.value)) {
     delete errors.value.cardNumber;

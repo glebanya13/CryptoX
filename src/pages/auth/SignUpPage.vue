@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { db } from "../../config/firebase";
 import { ref as dbRef, set } from "firebase/database";
 import { useRouter } from "vue-router";
@@ -12,6 +12,7 @@ const password = ref("");
 const agreed = ref(false);
 const errorMessage = ref("");
 const isLoading = ref(false);
+const infoMessage = ref("");
 const router = useRouter();
 
 const handleSubmit = async () => {
@@ -33,6 +34,7 @@ const handleSubmit = async () => {
   try {
     isLoading.value = true;
     errorMessage.value = "";
+    infoMessage.value = "";
 
     const auth = getAuth();
     const userCredential = await createUserWithEmailAndPassword(
@@ -41,6 +43,8 @@ const handleSubmit = async () => {
       password.value
     );
 
+    await sendEmailVerification(userCredential.user);
+
     await set(dbRef(db, "users/" + userCredential.user.uid), {
       fullName: fullName.value,
       phone: phone.value,
@@ -48,7 +52,18 @@ const handleSubmit = async () => {
       createdAt: new Date().toISOString(),
     });
 
-    router.push("/");
+    infoMessage.value = "Регистрация прошла успешно! Проверьте почту для подтверждения аккаунта.";
+
+    fullName.value = "";
+    phone.value = "";
+    email.value = "";
+    password.value = "";
+    agreed.value = false;
+
+    await auth.signOut();
+
+    router.push("/sign-in");
+
   } catch (error: any) {
     switch (error.code) {
       case "auth/email-already-in-use":
@@ -77,6 +92,9 @@ const handleSubmit = async () => {
       <form class="space-y-4" @submit.prevent="handleSubmit">
         <div v-if="errorMessage" class="text-red-500 text-sm text-center">
           {{ errorMessage }}
+        </div>
+        <div v-if="infoMessage" class="text-green-600 text-sm text-center">
+          {{ infoMessage }}
         </div>
 
         <input

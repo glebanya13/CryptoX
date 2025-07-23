@@ -35,7 +35,7 @@ onMounted(() => {
           id,
           ...review,
         }))
-        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)); // сортируем по убыванию даты
+        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     }
     isLoading.value = false;
   };

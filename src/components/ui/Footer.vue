@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
@@ -31,7 +30,7 @@ const navigateToSection = async (id: string) => {
 </script>
 
 <template>
-  <footer class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[90%] to-[#F06000] text-white text-sm px-4 py-8 mt-auto">
+  <footer class="bg-gradient-to-r from-[#360036] via-[#4D0538] via-[50%] to-[#F06000] text-white text-sm px-4 py-8 mt-auto">
     <div
       class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10"
     >
