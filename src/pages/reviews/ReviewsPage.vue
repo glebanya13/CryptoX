@@ -44,7 +44,7 @@ const addReview = async () => {
   if (!newReviewText.value.trim()) return;
 
   if (!authUser.value) {
-    router.push("/login");
+    router.push("/sign-in");
     return;
   }
 
@@ -151,7 +151,7 @@ const getMonthWord = (months: number) => {
         Чтобы оставить отзыв, пожалуйста, авторизуйтесь
       </p>
       <router-link
-        to="/login"
+        to="/sign-in"
         class="bg-[#4D0538] text-white py-2 px-6 rounded-lg hover:opacity-90 inline-block"
       >
         Войти
